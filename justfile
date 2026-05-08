@@ -6,8 +6,8 @@ install:
     cargo install cargo-depgraph@1.6.0 --locked
     cargo install cargo-edit@0.13.10 --locked
     cargo install cargo-check-external-types@0.4.0 --locked
-    cargo install git-cliff@2.12.0 --locked
-    cargo install cargo-tarpaulin@0.35.2 --locked
+    cargo install git-cliff@2.13.1 --locked
+    cargo install cargo-tarpaulin@0.35.4 --locked
     cargo install cargo-nextest@0.9.133 --locked
 
 pre-push-check:
@@ -33,6 +33,11 @@ pre-push: install pre-push-check validate-workspace check-external-types
 
 upgrade:
     cargo upgrade
+
+generate:
+    docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$(pwd)":/home/weaver/source otel/weaver:v0.23.0 registry generate --registry /home/weaver/source/crates/weaver_live_check/model/ --templates /home/weaver/source/crates/weaver_live_check/templates/ --v2 rust /home/weaver/source/crates/weaver_live_check/src/
+    docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$(pwd)":/home/weaver/source otel/weaver:v0.23.0 registry generate --registry /home/weaver/source/crates/weaver_live_check/model/ --templates /home/weaver/source/crates/weaver_live_check/templates/ --v2 markdown /home/weaver/source/crates/weaver_live_check/docs/
+    cargo fmt -p weaver_live_check
 
 validate-workspace:
     cargo xtask validate
